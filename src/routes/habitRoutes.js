@@ -1,11 +1,8 @@
-// src/routes/habitRoutes.js
 const express = require('express');
-const { createHabit, getHabits, trackHabit, getHabitEntries } = require('../controllers/habitController');
 const router = express.Router();
+const habitController = require('../controllers/habitController');
 
-router.post('/', createHabit);
-router.get('/:userId', getHabits);
-router.post('/track', trackHabit);
-router.get('/entries/:habitId', getHabitEntries);
+router.post('/', habitController.createHabit);
+router.get('/:id', habitController.getHabit);
 
 module.exports = router;

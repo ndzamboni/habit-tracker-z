@@ -1,28 +1,23 @@
-// src/controllers/userController.js
-const { User } = require('../models');
+const { User } = require('../../models');
 
-const createUser = async (req, res) => {
-  const { name, email, password } = req.body;
+exports.createUser = async (req, res) => {
   try {
-    const user = await User.create({ name, email, password });
+    const user = await User.create(req.body);
     res.status(201).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-const getUser = async (req, res) => {
-  const { id } = req.params;
+exports.getUser = async (req, res) => {
   try {
-    const user = await User.findByPk(id);
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({ error: 'User not found' });
+    const user = await User.findByPk(req.params.id);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
     }
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
-module.exports = { createUser, getUser };

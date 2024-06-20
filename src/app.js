@@ -1,25 +1,25 @@
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
-const { sequelize } = require('./models');
+const cors = require('cors');
 
+const app = express();
+const port = process.env.PORT || 5000;
+
+// Middleware
+app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// import routes
+// Routes
+const usersRouter = require('./routes/userRoutes');
+const habitsRouter = require('./routes/habitRoutes');
 
-const userRoutes = require('./routes/userRoutes');
-const habitRoutes = require('./routes/habitRoutes');
-app.use('/users', userRoutes);
-app.use('/habits', habitRoutes);
+app.use('/api/users', usersRouter);
+app.use('/api/habits', habitsRouter);
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the Habit Z Tracker API');
+// Start server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, async () => {
-    console.log('Server is running great on port ${PORT}');
-    await sequelize.authenticate();
-    console.log('Database connected!');
-});
-
+module.exports = app;

@@ -1,40 +1,39 @@
-// routes/habits.js
-
 const express = require('express');
 const { Pool } = require('pg');
+
 const router = express.Router();
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
 });
 
-// Create a new habit
-router.post('/', async (req, res) => {
-  const { title } = req.body;
-  const userId = req.session.userId;
-  try {
-    const result = await pool.query(
-      'INSERT INTO habits (user_id, title) VALUES ($1, $2) RETURNING id',
-      [userId, title]
-    );
-    res.status(201).send({ habitId: result.rows[0].id });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error creating habit');
+// Middleware to check if user is logged in
+function requireLogin(req, res, next) {
+  if (!req.session.userId) {
+    res.redirect('/auth/login');
+  } else {
+    next();
   }
-});
+}
 
-// Get all habits for a user
-router.get('/', async (req, res) => {
-  const userId = req.session.userId;
+// Get habits
+router.get('/', requireLogin, async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM habits WHERE user_id = $1', [userId]);
-    res.send(result.rows);
-  } catch (err) {
-    console.error(err);
+    const result = await pool.query('SELECT * FROM habits WHERE user_id = $1', [req.session.userId]);
+    res.json(result.rows);
+  } catch (error) {
     res.status(500).send('Error fetching habits');
+  }
+});
+
+// Add habit
+router.post('/add', requireLogin, async (req, res) => {
+  const { title } = req.body;
+  try {
+    await pool.query('INSERT INTO habits (user_id, title) VALUES ($1, $2)', [req.session.userId, title]);
+    res.redirect('/habits');
+  } catch (error) {
+    res.status(500).send('Error adding habit');
   }
 });
 

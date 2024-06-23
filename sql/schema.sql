@@ -1,4 +1,18 @@
 -- schema.sql
+-- drop tables and create tables
+-- drop tables
+DROP TABLE IF EXISTS habit_entries;
+DROP TABLE IF EXISTS habits;
+DROP TABLE IF EXISTS users;
+
+-- drop database
+DROP DATABASE IF EXISTS habit_tracker;
+
+-- create database
+CREATE DATABASE habit_tracker;
+
+-- use database
+\c habit_tracker;
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (

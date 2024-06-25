@@ -1,32 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Habits</title>
-  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Habit</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="container">
-    <h2>Your Habits</h2>
-    <form action="/habits/add" method="post">
-      <label for="title">New Habit:</label>
-      <input type="text" id="title" name="title" required>
-      <button type="submit">Add Habit</button>
-    </form>
-    <ul id="habit-list">
-      <!-- Habit items will be dynamically inserted here -->
-    </ul>
-  </div>
-  <script>
-    fetch('/habits')
-      .then(response => response.json())
-      .then(data => {
-        const habitList = document.getElementById('habit-list');
-        data.forEach(habit => {
-          const li = document.createElement('li');
-          li.textContent = habit.title;
-          habitList.appendChild(li);
-        });
-      });
-  </script>
+  <h1>Add a New Habit</h1>
+  <form action="/habits/add" method="post">
+    <label for="habitName">Habit Name:</label>
+    <input type="text" id="habitName" name="habitName" required><br>
+    <label for="habitDescription">Habit Description:</label>
+    <textarea id="habitDescription" name="habitDescription" required></textarea><br>
+    <button type="submit">Add Habit</button>
+  </form>
+  <a href="/habits">Back to Habit Tracker</a>
 </body>
 </html>

@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const { Pool } = require('pg');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -33,7 +34,7 @@ app.use('/habits', habitRoutes);
 
 // Default route to handle root URL
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/login.html');
+  res.sendFile(path.join(__dirname, 'views/login.html'));
 });
 
 // 404 error handling

@@ -3,18 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Habit</title>
+  <title>Habits</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Add a New Habit</h1>
-  <form action="/habits/add" method="post">
-    <label for="habitName">Habit Name:</label>
-    <input type="text" id="habitName" name="habitName" required><br>
-    <label for="habitDescription">Habit Description:</label>
-    <textarea id="habitDescription" name="habitDescription" required></textarea><br>
-    <button type="submit">Add Habit</button>
-  </form>
-  <a href="/habits">Back to Habit Tracker</a>
+  <h1>Your Habits</h1>
+  <a href="/habits/add">Add a New Habit</a>
+  <div id="habits-list">
+    <!-- Habits will be listed here -->
+  </div>
 </body>
 </html>

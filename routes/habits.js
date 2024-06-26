@@ -17,8 +17,16 @@ router.use((req, res, next) => {
 });
 
 // Habits page route
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/habits.html'));
+router.get('/', async (req, res) => {
+  const userId = req.session.userId;
+  try {
+    const result = await pool.query('SELECT * FROM habits WHERE user_id = $1', [userId]);
+    const habits = result.rows;
+    res.sendFile(path.join(__dirname, '../views/habits.html')); // Render the habits page
+  } catch (error) {
+    console.error('Error retrieving habits:', error);
+    res.status(500).send('Error retrieving habits');
+  }
 });
 
 // Add habit form route

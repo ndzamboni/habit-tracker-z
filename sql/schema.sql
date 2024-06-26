@@ -1,9 +1,7 @@
 -- Drop existing tables if they exist
-
-
+DROP TABLE IF EXISTS habit_entries;
 DROP TABLE IF EXISTS habits;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS habit_entries;
 
 -- Create users table
 CREATE TABLE users (
@@ -29,4 +27,3 @@ CREATE TABLE IF NOT EXISTS habit_entries (
   date DATE NOT NULL DEFAULT CURRENT_DATE,
   completed BOOLEAN NOT NULL DEFAULT false
 );
-

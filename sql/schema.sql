@@ -1,31 +1,25 @@
--- schema.sql
--- drop tables and create tables
--- drop tables
-DROP TABLE IF EXISTS habit_entries;
+-- Drop existing tables if they exist
+
+
 DROP TABLE IF EXISTS habits;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS habit_entries;
 
--- drop database
-DROP DATABASE IF EXISTS habit_tracker;
-
--- create database
-CREATE DATABASE habit_tracker;
-
--- use database
-\c habit_tracker;
-
--- Users table
-CREATE TABLE IF NOT EXISTS users (
+-- Create users table
+CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  username VARCHAR(255) UNIQUE NOT NULL,
+  username VARCHAR(255) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL
 );
 
--- Habits table
-CREATE TABLE IF NOT EXISTS habits (
+-- Create habits table
+CREATE TABLE habits (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id),
-  title VARCHAR(255) NOT NULL
+  user_id INTEGER NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Habit entries table (for tracking daily completions)
@@ -35,3 +29,4 @@ CREATE TABLE IF NOT EXISTS habit_entries (
   date DATE NOT NULL DEFAULT CURRENT_DATE,
   completed BOOLEAN NOT NULL DEFAULT false
 );
+

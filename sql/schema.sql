@@ -1,9 +1,14 @@
+-- drop database habits;
+DROP DATABASE IF EXISTS habit_tracker;
+-- create database habits;
+CREATE DATABASE habit_tracker;
+
+\c habit_tracker;
+
 -- Drop existing tables if they exist
-
-
-DROP TABLE IF EXISTS habits;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS habit_entries;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS habit_entries CASCADE;
+DROP TABLE IF EXISTS habits CASCADE;
 
 -- Create users table
 CREATE TABLE users (

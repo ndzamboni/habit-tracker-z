@@ -13,17 +13,16 @@ CREATE TABLE users (
 -- Create habits table
 CREATE TABLE habits (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL REFERENCES users(id),
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  created_at DATE NOT NULL
 );
 
--- Habit entries table (for tracking daily completions)
-CREATE TABLE IF NOT EXISTS habit_entries (
+-- Create habit entries table for tracking daily completions
+CREATE TABLE habit_entries (
   id SERIAL PRIMARY KEY,
-  habit_id INTEGER REFERENCES habits(id),
-  date DATE NOT NULL DEFAULT CURRENT_DATE,
+  habit_id INTEGER NOT NULL REFERENCES habits(id),
+  date DATE NOT NULL,
   completed BOOLEAN NOT NULL DEFAULT false
 );

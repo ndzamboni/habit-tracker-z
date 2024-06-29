@@ -1,0 +1,16 @@
+{{#extend "main"}}
+{{#content "body"}}
+<div class="container">
+    <h2>Your Habits</h2>
+    <a href="/habits/add">Add a New Habit</a>
+    <div id="habitsList">
+        {{#each habits}}
+        <div class="habit">
+            <p>{{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})</p>
+        </div>
+        {{/each}}
+    </div>
+    <div id="habitHeatmap"></div>
+</div>
+{{/content}}
+{{/extend}}

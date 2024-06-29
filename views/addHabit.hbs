@@ -1,0 +1,17 @@
+{{#extend "main"}}
+{{#content "body"}}
+<div class="container">
+    <h2>Add a New Habit</h2>
+    <form action="/habits/add" method="post">
+        <label for="habitName">Habit Name:</label>
+        <input type="text" id="habitName" name="habitName" required><br>
+        <label for="habitDescription">Habit Description:</label>
+        <textarea id="habitDescription" name="habitDescription" required></textarea><br>
+        <label for="habitDate">Date:</label>
+        <input type="date" id="habitDate" name="habitDate" required><br>
+        <button type="submit">Add Habit</button>
+    </form>
+    <a href="/habits">Back to Habit Tracker</a>
+</div>
+{{/content}}
+{{/extend}}

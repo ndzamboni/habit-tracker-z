@@ -1,48 +1,52 @@
 const express = require('express');
 const session = require('express-session');
-const { Pool } = require('pg');
+const exphbs = require('express-handlebars');
 const path = require('path');
+const { Pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Configure Handlebars
+app.engine('hbs', exphbs({
+  defaultLayout: 'main',
+  extname: '.hbs'
+}));
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Body parser middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public')); // Serve static files from the public directory
 
+// Session middleware
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false } // Set to true if using HTTPS
+  saveUninitialized: true,
+  cookie: { secure: 'auto' }
 }));
 
-// PostgreSQL pool
+// Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 // Routes
 const authRoutes = require('./routes/auth');
-const habitRoutes = require('./routes/habits');
-
+const habitsRoutes = require('./routes/habits');
 app.use('/auth', authRoutes);
-app.use('/habits', habitRoutes);
+app.use('/habits', habitsRoutes);
 
-// Default route to handle root URL
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views/login.html'));
+app.get('/', (req, res) => res.redirect('/auth/login'));
+
+app.use((req, res) => {
+  res.status(404).render('404');
 });
 
-// 404 error handling
-app.use((req, res, next) => {
-  res.status(404).send('Sorry, page not found');
-});
-
-// Server start
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

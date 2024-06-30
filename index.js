@@ -1,18 +1,26 @@
 const express = require('express');
-const session = require('express-session');
 const exphbs = require('express-handlebars');
+const session = require('express-session');
 const path = require('path');
-const { Pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Load helpers
+const dateHelpers = require('./helpers/dateHelpers');
+
 // Configure Handlebars
-app.engine('hbs', exphbs({
-  defaultLayout: 'main',
-  extname: '.hbs'
-}));
+const hbs = exphbs.create({
+    defaultLayout: 'main',
+    extname: '.hbs',
+    partialsDir: path.join(__dirname, 'views', 'partials'),
+    helpers: {
+        formatDate: dateHelpers.formatDate
+    }
+});
+
+app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -25,28 +33,24 @@ app.use(express.json());
 
 // Session middleware
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: 'auto' }
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: 'auto' }
 }));
 
 // Database connection
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
+const pool = require('./config/database');
 
-// Routes
-const authRoutes = require('./routes/auth');
-const habitsRoutes = require('./routes/habits');
-app.use('/auth', authRoutes);
-app.use('/habits', habitsRoutes);
+// Use central routes
+const routes = require('./routes');
+app.use(routes);
 
 app.get('/', (req, res) => res.redirect('/auth/login'));
 
+// 404 error handling
 app.use((req, res) => {
-  res.status(404).render('404');
+    res.status(404).render('404');
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

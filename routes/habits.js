@@ -1,6 +1,5 @@
 const express = require('express');
 const Habit = require('../models/Habit');
-
 const router = express.Router();
 
 router.use((req, res, next) => {
@@ -30,6 +29,17 @@ router.post('/add', async (req, res) => {
 
 router.get('/add', (req, res) => {
   res.render('addHabit');
+});
+
+router.get('/data', async (req, res) => {
+  const userId = req.session.userId;
+  const habits = await Habit.findByUserId(userId);
+  const habitCountByDate = habits.reduce((acc, habit) => {
+    const date = habit.created_at.toISOString().split('T')[0];
+    acc[date] = (acc[date] || 0) + 1;
+    return acc;
+  }, {});
+  res.json(habitCountByDate);
 });
 
 module.exports = router;

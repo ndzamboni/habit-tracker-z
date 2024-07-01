@@ -7,25 +7,21 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Load helpers
-const dateHelpers = require('./helpers/dateHelpers');
-
 // Configure Handlebars
 const hbs = exphbs.create({
     defaultLayout: 'main',
     extname: '.hbs',
     partialsDir: path.join(__dirname, 'views', 'partials'),
-    helpers: {
-        formatDate: dateHelpers.formatDate
-    }
+    helpers: require('./helpers/dateHelpers')
 });
 
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Serve static files
+// Serve static files from public and node_modules
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/scripts', express.static(path.join(__dirname, 'node_modules/cal-heatmap/dist')));
 
 // Body parser middleware
 app.use(express.urlencoded({ extended: true }));
@@ -48,7 +44,6 @@ app.use(routes);
 
 app.get('/', (req, res) => res.redirect('/auth/login'));
 
-// 404 error handling
 app.use((req, res) => {
     res.status(404).render('404');
 });

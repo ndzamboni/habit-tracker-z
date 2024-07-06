@@ -32,10 +32,10 @@ router.post('/add', async (req, res) => {
   const userId = req.session.userId;
   try {
     await Habit.create(userId, habitName, habitDescription, habitDate);
-    res.redirect('/habits');
+    res.status(201).json({ message: 'Habit added successfully' });
   } catch (error) {
     console.error('Error adding habit:', error);
-    res.status(500).send('Error adding habit');
+    res.status(500).json({ error: 'Error adding habit' });
   }
 });
 

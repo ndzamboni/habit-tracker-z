@@ -1,13 +1,19 @@
-<div class="container">
-    <h2>Add a New Habit</h2>
+<div class="container mx-auto p-6 bg-white shadow-md rounded">
+    <h2 class="text-2xl font-bold mb-4">Add a New Habit</h2>
     <form action="/habits/add" method="post">
-        <label for="habitName">Habit Name:</label>
-        <input type="text" id="habitName" name="habitName" required><br>
-        <label for="habitDescription">Habit Description:</label>
-        <textarea id="habitDescription" name="habitDescription" required></textarea><br>
-        <label for="habitDate">Date:</label>
-        <input type="date" id="habitDate" name="habitDate" required><br>
-        <button type="submit">Add Habit</button>
+        <div class="mb-4">
+            <label for="habitName" class="block text-gray-700">Habit Name:</label>
+            <input type="text" id="habitName" name="habitName" required class="w-full p-2 border rounded">
+        </div>
+        <div class="mb-4">
+            <label for="habitDescription" class="block text-gray-700">Habit Description:</label>
+            <textarea id="habitDescription" name="habitDescription" required class="w-full p-2 border rounded"></textarea>
+        </div>
+        <div class="mb-4">
+            <label for="habitDate" class="block text-gray-700">Date:</label>
+            <input type="date" id="habitDate" name="habitDate" required class="w-full p-2 border rounded">
+        </div>
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Add Habit</button>
     </form>
-    <a href="/habits">Back to Habit Tracker</a>
+    <a href="/habits" class="text-blue-500">Back to Habit Tracker</a>
 </div>

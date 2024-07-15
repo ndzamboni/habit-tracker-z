@@ -1,16 +1,12 @@
-<div class="container">
-    <h2>Your Habits</h2>
-    <a href="/habits/add">Add a New Habit</a>
-    <div id="habitsList">
+<div class="container mx-auto p-6 bg-white shadow-md rounded">
+    <h2 class="text-2xl font-bold mb-4">Your Habits</h2>
+    <a href="/habits/add" class="text-blue-500">Add a New Habit</a>
+    <div id="habitsList" class="mt-4">
         {{#each habits}}
-        <div class="habit">
+        <div class="habit mb-2 p-2 border-b">
             <p>{{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})</p>
         </div>
         {{/each}}
     </div>
-    <div id="habitHeatmap"></div>
+    <div id="habitHeatmap" class="mt-4"></div>
 </div>
-
-<link rel="stylesheet" href="/scripts/cal-heatmap.css">
-<script src="/scripts/cal-heatmap.js"></script>
-<script src="/js/scripts.js"></script>

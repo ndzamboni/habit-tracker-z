@@ -1,14 +1,11 @@
-const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
-const router = express.Router();
-
-router.get('/login', (req, res) => {
+exports.showLogin = (req, res) => {
   res.render('login');
-});
+};
 
-router.post('/login', async (req, res) => {
+exports.login = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findByUsername(username);
   if (user && await bcrypt.compare(password, user.password_hash)) {
@@ -17,18 +14,26 @@ router.post('/login', async (req, res) => {
   } else {
     res.render('login', { error: 'Invalid credentials' });
   }
-});
+};
 
-router.get('/register', (req, res) => {
+exports.showRegister = (req, res) => {
   res.render('register');
-});
+};
 
-router.post('/register', async (req, res) => {
+exports.register = async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await User.create(username, hashedPassword);
   req.session.userId = user.id;
   res.redirect('/habits');
-});
+};
 
-module.exports = router;
+exports.logout = (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.redirect('/habits');
+    }
+    res.clearCookie('connect.sid');
+    res.redirect('/auth/login');
+  });
+};

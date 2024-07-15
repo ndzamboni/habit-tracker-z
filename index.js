@@ -2,7 +2,7 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const path = require('path');
-const config = require('./config/config');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,8 +19,9 @@ app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Serve static files from public
+// Serve static files from public and node_modules
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.use('/scripts', express.static(path.join(__dirname, 'node_modules/d3/dist')));
 
 // Body parser middleware
@@ -29,7 +30,7 @@ app.use(express.json());
 
 // Session middleware
 app.use(session({
-    secret: config.sessionSecret,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: 'auto' }

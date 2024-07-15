@@ -1,0 +1,16 @@
+<div class="container">
+    <h2 class="mb-4">Your Profile</h2>
+    <h3 class="h5">Categories</h3>
+    <ul class="list-group mb-4">
+        {{#each categories}}
+        <li class="list-group-item">{{this.name}}</li>
+        {{/each}}
+    </ul>
+    <h3 class="h5">Habits</h3>
+    <ul class="list-group mb-4">
+        {{#each habits}}
+        <li class="list-group-item">{{this.name}} - {{this.description}} ({{formatDate this.created_at "MMM Do YYYY"}}) - {{this.category_id}}</li>
+        {{/each}}
+    </ul>
+    <a href="/categories" class="btn btn-primary">Manage Categories</a>
+</div>

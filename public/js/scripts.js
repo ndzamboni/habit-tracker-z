@@ -1,37 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log(`
-    ███████████████████████████
-    ███████▀▀▀░░░░░░░▀▀▀███████
-    ████▀░░░░░░░░░░░░░░░░░▀████
-    ███│░░░░░░░░░░░░░░░░░░░│███
-    ██▌│░░░░░░░░░░░░░░░░░░░│▐██
-    ██░└┐░░░░░░░░░░░░░░░░░┌┘░██
-    ██░░└┐░░░░░░░░░░░░░░░┌┘░░██
-    ██░░┌┘▄▄▄▄▄░░░░░▄▄▄▄▄└┐░░██
-    ██▌░│██████▌░░░▐██████│░▐██
-    ███░│▐███▀▀░░▄░░▀▀███▌│░███
-    ██▀─┘░░░░░░░▐█▌░░░░░░░└─▀██
-    ██▄░░░▄▄▄▓░░▀█▀░░▓▄▄▄░░░▄██
-    ████▄─┘██▌░░░░░░░▐██└─▄████
-    █████░░▐█─┬┬┬┬┬┬┬─█▌░░█████
-    ████▌░░░▀┬┼┼┼┼┼┼┼┬▀░░░▐████
-    █████▄░░░└┴┴┴┴┴┴┴┘░░░▄█████
-    ███████▄░░░░░░░░░░░▄███████
-    ██████████▄▄▄▄▄▄▄██████████
-    ███████████████████████████
-    `);
-
     fetch('/habits/data')
         .then(response => {
-            console.log('Fetch response:', response);
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             return response.json();
         })
         .then(data => {
-            console.log('Data for heatmap:', data);
-
             const margin = { top: 30, right: 30, bottom: 30, left: 30 },
                   width = 600 - margin.left - margin.right,
                   height = 400 - margin.top - margin.bottom;

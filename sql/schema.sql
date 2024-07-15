@@ -1,6 +1,7 @@
 -- Drop existing tables if they exist
 DROP TABLE IF EXISTS habit_entries;
 DROP TABLE IF EXISTS habits;
+DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS users;
 
 -- Create users table
@@ -10,13 +11,21 @@ CREATE TABLE users (
   password_hash VARCHAR(255) NOT NULL
 );
 
+-- Create categories table
+CREATE TABLE categories (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  user_id INTEGER NOT NULL REFERENCES users(id)
+);
+
 -- Create habits table
 CREATE TABLE habits (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id),
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  category_id INTEGER REFERENCES categories(id)
 );
 
 -- Create habit entries table for tracking daily completions

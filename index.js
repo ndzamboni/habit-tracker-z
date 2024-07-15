@@ -21,7 +21,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Serve static files from public
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/scripts', express.static(path.join(__dirname, 'node_modules/cal-heatmap/dist')));
+app.use('/scripts', express.static(path.join(__dirname, 'node_modules/d3/dist')));
 
 // Body parser middleware
 app.use(express.urlencoded({ extended: true }));

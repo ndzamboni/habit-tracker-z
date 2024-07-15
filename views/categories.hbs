@@ -1,0 +1,16 @@
+<div class="container">
+    <h2 class="mb-4">Categories</h2>
+    <ul class="list-group mb-4">
+        {{#each categories}}
+        <li class="list-group-item">{{this.name}}</li>
+        {{/each}}
+    </ul>
+    <form action="/categories/add" method="post" class="mb-4">
+        <div class="mb-3">
+            <label for="categoryName" class="form-label">Category Name:</label>
+            <input type="text" id="categoryName" name="categoryName" required class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Category</button>
+    </form>
+    <a href="/profile" class="btn btn-secondary">Back to Profile</a>
+</div>

@@ -10,5 +10,6 @@ router.get('/', habitController.showHabits);
 router.get('/add', habitController.showAddHabit);
 router.post('/add', habitController.addHabit);
 router.get('/data', habitController.getHabitData);
+router.post('/delete/:id', habitController.deleteHabit);
 
 module.exports = router;

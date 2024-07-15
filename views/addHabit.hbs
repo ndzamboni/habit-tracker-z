@@ -1,19 +1,27 @@
-<div class="container mx-auto p-6 bg-white shadow-md rounded">
-    <h2 class="text-2xl font-bold mb-4">Add a New Habit</h2>
+<div class="container">
+    <h2 class="mb-4">Add a New Habit</h2>
     <form action="/habits/add" method="post">
-        <div class="mb-4">
-            <label for="habitName" class="block text-gray-700">Habit Name:</label>
-            <input type="text" id="habitName" name="habitName" required class="w-full p-2 border rounded">
+        <div class="mb-3">
+            <label for="habitName" class="form-label">Habit Name:</label>
+            <input type="text" id="habitName" name="habitName" required class="form-control">
         </div>
-        <div class="mb-4">
-            <label for="habitDescription" class="block text-gray-700">Habit Description:</label>
-            <textarea id="habitDescription" name="habitDescription" required class="w-full p-2 border rounded"></textarea>
+        <div class="mb-3">
+            <label for="habitDescription" class="form-label">Habit Description:</label>
+            <textarea id="habitDescription" name="habitDescription" required class="form-control"></textarea>
         </div>
-        <div class="mb-4">
-            <label for="habitDate" class="block text-gray-700">Date:</label>
-            <input type="date" id="habitDate" name="habitDate" required class="w-full p-2 border rounded">
+        <div class="mb-3">
+            <label for="habitDate" class="form-label">Date:</label>
+            <input type="date" id="habitDate" name="habitDate" required class="form-control">
         </div>
-        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Add Habit</button>
+        <div class="mb-3">
+            <label for="categoryId" class="form-label">Category:</label>
+            <select id="categoryId" name="categoryId" required class="form-select">
+                {{#each categories}}
+                <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Habit</button>
     </form>
-    <a href="/habits" class="text-blue-500">Back to Habit Tracker</a>
+    <a href="/habits" class="btn btn-secondary mt-3">Back to Habit Tracker</a>
 </div>

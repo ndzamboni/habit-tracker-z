@@ -1,52 +1,77 @@
-/* public/styles.css */
+:root {
+  --bg-color: #e0f7e9;
+  --text-color: #333;
+  --container-bg: #fff;
+  --input-bg: #fff;
+  --input-text: #333;
+  --button-bg: #4CAF50;
+  --button-hover-bg: #45a049;
+}
 
-/* Basic styles */
+body.dark-mode {
+  --bg-color: #2c003e;
+  --text-color: #fff;
+  --container-bg: #4b0082;
+  --input-bg: #4b0082;
+  --input-text: #fff;
+  --button-bg: #ffdd57;
+  --button-hover-bg: #ffc107;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
-  
-  h2 {
-    margin-top: 0;
-  }
-  
-  form {
-    margin-bottom: 20px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input[type="text"],
-  input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: var(--container-bg);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+input[type="text"],
+input[type="password"],
+textarea,
+select {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 10px;
+  width: 100%;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button {
+  background-color: var(--button-bg);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+/* Apply dark mode styles based on the body's class */
+body.dark-mode .container {
+  background-color: var(--container-bg);
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="password"],
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+}

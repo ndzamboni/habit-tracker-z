@@ -1,15 +1,16 @@
 const express = require('express');
 const habitController = require('../controllers/habitController');
-const authMiddleware = require('../middlewares/authMiddleware');
+const { ensureAuthenticated } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.use(authMiddleware.ensureAuthenticated);
+router.use(ensureAuthenticated);
 
 router.get('/', habitController.showHabits);
 router.get('/add', habitController.showAddHabit);
 router.post('/add', habitController.addHabit);
 router.get('/data', habitController.getHabitData);
+router.get('/data/:habitId', habitController.getHabitData);
 router.post('/delete/:id', habitController.deleteHabit);
 
 module.exports = router;

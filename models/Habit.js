@@ -17,14 +17,6 @@ class Habit {
     return result.rows;
   }
 
-  static async findByCategory(userId, categoryId) {
-    const result = await pool.query(
-      'SELECT * FROM habits WHERE user_id = $1 AND category_id = $2 ORDER BY created_at DESC',
-      [userId, categoryId]
-    );
-    return result.rows;
-  }
-
   static async delete(id, userId) {
     const result = await pool.query(
       'DELETE FROM habits WHERE id = $1 AND user_id = $2 RETURNING *',
@@ -33,10 +25,5 @@ class Habit {
     return result.rows[0];
   }
 }
-
-module.exports = Habit;
-
-
-
 
 module.exports = Habit;

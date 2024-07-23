@@ -1,10 +1,10 @@
 const express = require('express');
 const categoryController = require('../controllers/categoryController');
-const authMiddleware = require('../middlewares/authMiddleware');
+const { ensureAuthenticated } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.use(authMiddleware.ensureAuthenticated);
+router.use(ensureAuthenticated);
 
 router.get('/', categoryController.showCategories);
 router.post('/add', categoryController.addCategory);

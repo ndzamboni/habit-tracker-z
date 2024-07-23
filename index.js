@@ -6,6 +6,8 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const { ensureAuthenticated } = require('./middleware/authMiddleware');
+const { databaseUrl, sessionSecret, nodeEnv, ssl } = require('./config/config');
 
 // Configure Handlebars
 const hbs = exphbs.create({
@@ -30,9 +32,9 @@ app.use(express.json());
 
 // Session middleware
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: sessionSecret,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: 'auto' }
 }));
 

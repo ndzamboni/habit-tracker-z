@@ -1,4 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Theme switcher
+    const themeSwitcher = document.getElementById('theme-switcher');
+    themeSwitcher.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    // Apply saved theme on load
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // Fetch and display data using D3.js
     fetch('/habits/data')
         .then(response => {
             if (!response.ok) {
@@ -20,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       "translate(" + margin.left + "," + margin.top + ")");
 
             const x = d3.scaleTime()
-                .domain([new Date(), new Date(new Date().setMonth(new Date().getMonth() + 3))])
+                .domain([new Date(d3.min(data, d => d.date)), new Date(d3.max(data, d => d.date))])
                 .range([0, width]);
 
             const y = d3.scaleBand()
@@ -32,6 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .interpolator(d3.interpolateBlues)
                 .domain([0, 4]);
 
+            const cellWidth = (width / data.length) * 0.8;  // Calculate cell width
+
             svg.selectAll()
                 .data(data, function(d) { return d.date+':'+d.habit; })
                 .enter()
@@ -40,8 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("y", function(d) { return y(d.habit) })
                 .attr("rx", 4)
                 .attr("ry", 4)
-                .attr("width", x.bandwidth() )
-                .attr("height", y.bandwidth() )
+                .attr("width", cellWidth)  // Use calculated cell width
+                .attr("height", y.bandwidth())
                 .style("fill", function(d) { return myColor(d.value)} )
                 .style("stroke-width", 4)
                 .style("stroke", "none")

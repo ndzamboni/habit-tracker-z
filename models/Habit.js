@@ -24,6 +24,15 @@ class Habit {
     );
     return result.rows[0];
   }
+
+  static async findByUserIdAndCategoryId(userId, categoryId) {
+    const result = await pool.query(
+        'SELECT * FROM habits WHERE user_id = $1 AND category_id = $2 ORDER BY created_at DESC',
+        [userId, categoryId]
+    );
+    return result.rows;
+}
+
 }
 
 module.exports = Habit;

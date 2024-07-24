@@ -1,18 +1,10 @@
-function renderCalendarHeatmap(data, categoryId) {
+function renderCalendarHeatmap(data) {
     d3.select("#habitHeatmap").selectAll("*").remove(); // Clear existing heatmap
 
     const margin = { top: 20, right: 10, bottom: 10, left: 20 };
     const cellSize = 20;
     const width = cellSize * 7 + margin.left + margin.right;
     const height = cellSize * 53 + margin.top + margin.bottom; // Adjust the height to accommodate the vertical layout
-
-    const svg = d3.select("#habitHeatmap")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .style("border", "1px solid #ccc") // Add border around the chart
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
 
     const color = d3.scaleSequential()
         .interpolator(d3.interpolateRdYlGn) // Use green-to-red gradient
@@ -21,17 +13,23 @@ function renderCalendarHeatmap(data, categoryId) {
     const years = d3.groups(Object.entries(data), d => new Date(d[0]).getFullYear());
 
     years.forEach(([year, entries], index) => {
-        const yearGroup = svg.append("g")
-            .attr("transform", `translate(${index * width}, 0)`);
+        const svg = d3.select("#habitHeatmap")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .style("border", "1px solid #ccc") // Add border around the chart
+            .style("margin", "10px") // Add margin between charts
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        yearGroup.append("text")
+        svg.append("text")
             .attr("x", -5)
             .attr("y", -5)
             .attr("font-size", 14)
             .attr("text-anchor", "start")
             .text(year);
 
-        const rect = yearGroup.append("g")
+        const rect = svg.append("g")
             .selectAll("rect")
             .data(d3.timeDays(new Date(year, 0, 1), new Date(year + 1, 0, 1)))
             .enter().append("rect")
@@ -50,7 +48,7 @@ function renderCalendarHeatmap(data, categoryId) {
             .select("title")
             .text(d => `${d}: ${data[d]}`);
 
-        yearGroup.append("g")
+        svg.append("g")
             .selectAll("text")
             .data(d3.range(7))
             .enter().append("text")
@@ -60,7 +58,7 @@ function renderCalendarHeatmap(data, categoryId) {
             .attr("text-anchor", "middle")
             .text(d => "SMTWTFS"[d]);
 
-        const monthGroup = yearGroup.append("g")
+        const monthGroup = svg.append("g")
             .selectAll("g")
             .data(d3.timeMonths(new Date(year, 0, 1), new Date(year + 1, 0, 1)))
             .enter().append("g");

@@ -107,12 +107,13 @@ body.dark-mode button:hover {
 }
 
 #habitHeatmap {
-  width: 100%;
-  overflow-x: auto; /* Allow horizontal scrolling for smaller screens */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Space between charts */
 }
 
 svg {
-  width: 100%;
+  width: 25%;
   height: auto;
   border: 1px solid #ccc; /* Border around the SVG */
 }

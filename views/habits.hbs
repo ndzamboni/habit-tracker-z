@@ -1,14 +1,47 @@
-<div class="container">
-    <h2 class="mb-4">Your Habits</h2>
-    <a href="/habits/add" class="btn btn-primary mb-3">Add a New Habit</a>
-    <div class="mb-3">
-        <label for="categorySelector" class="form-label">Select Category:</label>
-        <select id="categorySelector" class="form-select">
-            <option value="all">All Categories</option>
-            {{#each categories}}
-            <option value="{{this.id}}">{{this.name}}</option>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker - View Habits</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Habits</h1>
+        <a href="/habits/add" class="btn btn-primary mb-3">Add a New Habit</a>
+
+        <!-- Category Selection -->
+        <div class="mb-4">
+            <label for="categorySelector" class="form-label">Select Category:</label>
+            <select id="categorySelector" class="form-select">
+                <option value="all">All Categories</option>
+                {{#each categories}}
+                <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <!-- Habits List -->
+        <div id="habitsList" class="list-group">
+            {{#each habits}}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                {{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})
+                <form action="/habits/delete/{{id}}" method="post" class="ms-3">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </div>
             {{/each}}
-        </select>
+        </div>
+
+        <!-- Heatmap Visualization Container -->
+        <div id="habitHeatmap" class="mt-4"></div>
     </div>
-    <div id="habitHeatmap" class="mt-4"></div>
-</div>
+
+    <!-- D3.js Library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Custom Scripts -->
+    <script src="/js/scripts.js" defer></script>
+    <script src="/js/visualization.js" defer></script>
+</body>
+</html>

@@ -16,6 +16,13 @@ class Category {
     );
     return result.rows;
   }
+
+  static async delete(id) {
+    await pool.query('DELETE FROM categories WHERE id = $1', [id]);
 }
+
+}
+
+
 
 module.exports = Category;

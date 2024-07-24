@@ -22,3 +22,15 @@ exports.addCategory = async (req, res) => {
     res.status(500).send('Error adding category');
   }
 };
+
+exports.deleteCategory = async (req, res) => {
+  const categoryId = req.params.id;
+
+  try {
+      await Category.delete(categoryId);
+      res.redirect('/categories');
+  } catch (error) {
+      console.error('Error deleting category:', error);
+      res.status(500).send('Error deleting category');
+  }
+};

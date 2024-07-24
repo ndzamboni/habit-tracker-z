@@ -1,26 +1,30 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Theme switcher
     const themeSwitcher = document.getElementById('theme-switcher');
-    themeSwitcher.addEventListener('click', function() {
-        document.body.classList.toggle('dark-mode');
-        if (document.body.classList.contains('dark-mode')) {
-            localStorage.setItem('theme', 'dark');
-        } else {
-            localStorage.setItem('theme', 'light');
-        }
-    });
+    if (themeSwitcher) {
+        themeSwitcher.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
 
-    // Apply saved theme on load
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
+        // Apply saved theme on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
     }
 
     const categorySelector = document.getElementById('categorySelector');
-    categorySelector.addEventListener('change', function() {
-        const categoryId = categorySelector.value;
-        fetchHabitData(categoryId);
-    });
+    if (categorySelector) {
+        categorySelector.addEventListener('change', function() {
+            const categoryId = categorySelector.value;
+            fetchHabitData(categoryId);
+        });
+    }
 
     // Initial load
     fetchHabitData('all');
@@ -35,7 +39,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                renderCalendarHeatmap(data, categoryId);
+                if (typeof renderCalendarHeatmap === 'function') {
+                    renderCalendarHeatmap(data, categoryId); // Ensure this function is available
+                } else {
+                    console.error('renderCalendarHeatmap is not defined');
+                }
             })
             .catch(error => {
                 console.error('Error fetching data:', error);

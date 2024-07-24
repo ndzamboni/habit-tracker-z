@@ -105,3 +105,18 @@ body.dark-mode button {
 body.dark-mode button:hover {
   background-color: #ffc107;
 }
+
+#habitHeatmap {
+  width: 100%;
+  overflow-x: auto; /* Allow horizontal scrolling for smaller screens */
+}
+
+svg {
+  width: 100%;
+  height: auto;
+  border: 1px solid #ccc; /* Border around the SVG */
+}
+
+body.dark-mode #habitHeatmap svg {
+  border: 1px solid #666; /* Dark mode border color */
+}

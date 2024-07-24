@@ -1,83 +1,76 @@
 function renderCalendarHeatmap(data, categoryId) {
     d3.select("#habitHeatmap").selectAll("*").remove(); // Clear existing heatmap
 
-    const width = Math.max(document.getElementById('habitHeatmap').clientWidth, 960);
-    const height = 136;
-    const cellSize = 17;
+    const margin = { top: 20, right: 10, bottom: 10, left: 20 };
+    const cellSize = 20;
+    const width = cellSize * 7 + margin.left + margin.right;
+    const height = cellSize * 53 + margin.top + margin.bottom; // Adjust the height to accommodate the vertical layout
+
+    const svg = d3.select("#habitHeatmap")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("border", "1px solid #ccc") // Add border around the chart
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const color = d3.scaleSequential()
+        .interpolator(d3.interpolateRdYlGn) // Use green-to-red gradient
+        .domain([d3.max(Object.values(data)), 0]); // Reverse the gradient
 
     const years = d3.groups(Object.entries(data), d => new Date(d[0]).getFullYear());
 
-    const color = d3.scaleSequential(d3.interpolateBlues)
-        .domain([0, d3.max(Object.values(data))]);
+    years.forEach(([year, entries], index) => {
+        const yearGroup = svg.append("g")
+            .attr("transform", `translate(${index * width}, 0)`);
 
-    const svg = d3.select("#habitHeatmap")
-        .selectAll("svg")
-        .data(years)
-        .enter().append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("class", "year")
-        .append("g")
-        .attr("transform", `translate(${(width - cellSize * 53) / 2},${height - cellSize * 7 - 1})`);
+        yearGroup.append("text")
+            .attr("x", -5)
+            .attr("y", -5)
+            .attr("font-size", 14)
+            .attr("text-anchor", "start")
+            .text(year);
 
-    svg.append("text")
-        .attr("transform", `translate(-6,${cellSize * 3.5})rotate(-90)`)
-        .attr("font-size", 10)
-        .attr("text-anchor", "middle")
-        .text(d => d[0]);
+        const rect = yearGroup.append("g")
+            .selectAll("rect")
+            .data(d3.timeDays(new Date(year, 0, 1), new Date(year + 1, 0, 1)))
+            .enter().append("rect")
+            .attr("width", cellSize)
+            .attr("height", cellSize)
+            .attr("x", d => d.getDay() * cellSize)
+            .attr("y", d => (d3.timeWeek.count(d3.timeYear(d), d) + 1) * cellSize)
+            .datum(d3.timeFormat("%Y-%m-%d"));
 
-    const rect = svg.append("g")
-        .attr("fill", "none")
-        .attr("stroke", "#ccc")
-        .selectAll("rect")
-        .data(d => d3.timeDays(new Date(d[0], 0, 1), new Date(d[0] + 1, 0, 1)))
-        .enter().append("rect")
-        .attr("width", cellSize)
-        .attr("height", cellSize)
-        .attr("x", d => d3.timeWeek.count(d3.timeYear(d), d) * cellSize)
-        .attr("y", d => d.getDay() * cellSize)
-        .datum(d3.timeFormat("%Y-%m-%d"));
+        rect.append("title")
+            .text(d => d);
 
-    rect.append("title")
-        .text(d => d);
+        rect.filter(d => d in data)
+            .attr("fill", d => color(data[d]))
+            .select("title")
+            .text(d => `${d}: ${data[d]}`);
 
-    rect.filter(d => d in data)
-        .attr("fill", d => color(data[d]))
-        .select("title")
-        .text(d => `${d}: ${data[d]}`);
+        yearGroup.append("g")
+            .selectAll("text")
+            .data(d3.range(7))
+            .enter().append("text")
+            .attr("x", (d, i) => i * cellSize + cellSize / 2)
+            .attr("y", -5)
+            .attr("font-size", 10)
+            .attr("text-anchor", "middle")
+            .text(d => "SMTWTFS"[d]);
 
-    svg.append("g")
-        .attr("text-anchor", "end")
-        .selectAll("text")
-        .data(d3.range(1, 8))
-        .enter().append("text")
-        .attr("x", -5)
-        .attr("y", d => (d - 1) * cellSize + 10)
-        .attr("dy", "0.32em")
-        .attr("font-size", 10)
-        .text(d => "SMTWTFS"[d - 1]);
+        const monthGroup = yearGroup.append("g")
+            .selectAll("g")
+            .data(d3.timeMonths(new Date(year, 0, 1), new Date(year + 1, 0, 1)))
+            .enter().append("g");
 
-    const month = svg.append("g")
-        .selectAll("g")
-        .data(d => d3.timeMonths(new Date(d[0], 0, 1), new Date(d[0] + 1, 0, 1)))
-        .enter().append("g");
-
-    month.append("text")
-        .attr("x", d => d3.timeWeek.count(d3.timeYear(d), d3.timeMonth.floor(d)) * cellSize + 2)
-        .attr("y", -5)
-        .attr("font-size", 10)
-        .text(d3.timeFormat("%b"));
-
-    month.append("path")
-        .attr("stroke", "#000")
-        .attr("stroke-width", 0.5)
-        .attr("fill", "none")
-        .attr("d", function(d) {
-            const t1 = new Date(d.getFullYear(), d.getMonth() + 1, 0),
-                d0 = d.getDay(), w0 = d3.timeWeek.count(d3.timeYear(d), d),
-                d1 = t1.getDay(), w1 = d3.timeWeek.count(d3.timeYear(t1), t1);
-            return `M${(w0 + 1) * cellSize},${d0 * cellSize}H${w0 * cellSize}V${7 * cellSize}H${w1 * cellSize}V${(d1 + 1) * cellSize}H${(w1 + 1) * cellSize}V0H${(w0 + 1) * cellSize}Z`;
-        });
+        monthGroup.append("text")
+            .attr("x", -5)
+            .attr("y", d => (d3.timeWeek.count(d3.timeYear(d), d) + 1) * cellSize + cellSize / 1.5)
+            .attr("font-size", 10)
+            .attr("text-anchor", "end")
+            .text(d3.timeFormat("%b"));
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {

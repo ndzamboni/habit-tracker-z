@@ -1,50 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habit Tracker - View Habits</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Your Habits</h1>
-        <a href="/habits/add" class="btn btn-primary mb-3">Add a New Habit</a>
+<div class="container">
+    <h1>Your Habits</h1>
+    <a href="/habits/add" class="btn btn-primary mb-3">Add a New Habit</a>
 
-        <!-- Category Selection -->
-        <div class="mb-4">
-            <label for="categorySelector" class="form-label">Select Category:</label>
-            <select id="categorySelector" class="form-select">
-                <option value="all">All Categories</option>
-                {{#each categories}}
-                <option value="{{this.id}}">{{this.name}}</option>
-                {{/each}}
-            </select>
-        </div>
-
-        <!-- Habits List -->
-        <div id="habitsList" class="list-group mb-4">
-            {{#each habits}}
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                {{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})
-                <form action="/habits/delete/{{id}}" method="post" class="ms-3">
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
-            </div>
+    <!-- Category Selection -->
+    <div class="mb-4">
+        <label for="categorySelector" class="form-label">Select Category:</label>
+        <select id="categorySelector" class="form-select">
+            <option value="all">All Categories</option>
+            {{#each categories}}
+            <option value="{{this.id}}">{{this.name}}</option>
             {{/each}}
-        </div>
-
-        <!-- Calendar Heatmap Container -->
-        <div id="habitHeatmap" class="mt-4"></div>
+        </select>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- D3.js Library -->
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- Custom Scripts -->
-    <script src="/js/scripts.js" defer></script>
-    <script src="/js/calendarHeatmap.js" defer></script>
-</body>
-</html>
+    <!-- Habits List -->
+    <div id="habitsList" class="list-group mb-4">
+        {{#each habits}}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            {{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})
+            <form action="/habits/delete/{{id}}" method="post" class="ms-3">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+        </div>
+        {{/each}}
+    </div>
+
+    <!-- Calendar Heatmap Container -->
+    <div id="habitHeatmap" class="mt-4"></div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- D3.js Library -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<!-- Custom Scripts -->
+<script src="/js/scripts.js" defer></script>
+<script src="/js/calendarHeatmap.js" defer></script>

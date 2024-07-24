@@ -1,0 +1,8 @@
+{{#each habits}}
+<div class="list-group-item d-flex justify-content-between align-items-center">
+    {{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})
+    <form action="/habits/delete/{{id}}" method="post" class="ms-3">
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+    </form>
+</div>
+{{/each}}

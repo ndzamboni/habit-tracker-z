@@ -86,5 +86,23 @@ exports.getHabitDataByCategory = async (req, res) => {
   }
 };
 
+exports.getHabitDataForCalendar = async (req, res) => {
+  const userId = req.session.userId;
+
+  try {
+      const habits = await Habit.findByUserId(userId);
+      const habitCountByDate = habits.reduce((acc, habit) => {
+          const date = habit.created_at.toISOString().split('T')[0];
+          acc[date] = (acc[date] || 0) + 1;
+          return acc;
+      }, {});
+      res.json(habitCountByDate);
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Error fetching data' });
+  }
+};
+
+
 
 

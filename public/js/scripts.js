@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchHabitData('all');
 
     function fetchHabitData(categoryId) {
-        const url = categoryId === 'all' ? '/habits/data' : `/habits/data/${categoryId}`;
+        const url = categoryId === 'all' ? '/habits/data/calendar' : `/habits/data/${categoryId}`;
         fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -35,8 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                console.log(data); // Log the data to verify
-                renderHeatmap(data);
+                renderCalendarHeatmap(data, categoryId);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);

@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetchHabitData();
+    fetchHabitData('all');
 
-    function fetchHabitData() {
-        fetch('/habits/data/calendar')
+    function fetchHabitData(categoryId) {
+        const url = categoryId === 'all' ? '/habits/data/calendar' : `/habits/data/${categoryId}`;
+        fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok ' + response.statusText);
@@ -10,15 +11,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                renderCalendarHeatmap(data);
+                renderCalendarHeatmap(data, categoryId);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
     }
 
-    function renderCalendarHeatmap(data) {
-        const width = 960;
+    function renderCalendarHeatmap(data, categoryId) {
+        d3.select("#habitHeatmap").selectAll("*").remove(); // Clear existing heatmap
+
+        const width = Math.max(document.getElementById('habitHeatmap').clientWidth, 960);
         const height = 136;
         const cellSize = 17;
 

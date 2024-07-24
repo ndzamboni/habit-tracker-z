@@ -39,7 +39,8 @@ function renderCalendarHeatmap(data, categoryId) {
             .attr("height", cellSize)
             .attr("x", d => d.getDay() * cellSize)
             .attr("y", d => (d3.timeWeek.count(d3.timeYear(d), d) + 1) * cellSize)
-            .datum(d3.timeFormat("%Y-%m-%d"));
+            .datum(d3.timeFormat("%Y-%m-%d"))
+            .attr("fill", "rgba(0, 0, 0, 0)"); // Set default color for squares without data to be translucent
 
         rect.append("title")
             .text(d => d);

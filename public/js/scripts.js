@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
+                console.log(data); // Log the data to verify
                 renderHeatmap(data);
             })
             .catch(error => {

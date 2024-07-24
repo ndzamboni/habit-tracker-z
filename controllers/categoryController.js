@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const Habit = require('../models/Habit');
 
 exports.showCategories = async (req, res) => {
   const userId = req.session.userId;
@@ -27,6 +28,8 @@ exports.deleteCategory = async (req, res) => {
   const categoryId = req.params.id;
 
   try {
+      // Update associated habits first
+      await Habit.updateCategoryIdToNull(categoryId);
       await Category.delete(categoryId);
       res.redirect('/categories');
   } catch (error) {
@@ -34,3 +37,4 @@ exports.deleteCategory = async (req, res) => {
       res.status(500).send('Error deleting category');
   }
 };
+

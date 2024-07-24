@@ -5,7 +5,8 @@ exports.showHabits = async (req, res) => {
   const userId = req.session.userId;
   try {
     const habits = await Habit.findByUserId(userId);
-    res.render('habits', { habits });
+    const categories = await Category.findByUserId(userId);
+    res.render('habits', { habits, categories });
   } catch (error) {
     console.error('Error fetching habits:', error);
     res.status(500).send('Error fetching habits');
@@ -41,14 +42,43 @@ exports.getHabitData = async (req, res) => {
     const habits = await Habit.findByUserId(userId);
     const habitCountByDate = habits.reduce((acc, habit) => {
       const date = habit.created_at.toISOString().split('T')[0];
-      if (!acc[date]) {
-        acc[date] = { date, habit: habit.name, value: 1 };
-      } else {
-        acc[date].value += 1;
-      }
+      acc[date] = (acc[date] || 0) + 1;
       return acc;
     }, {});
-    res.json(Object.values(habitCountByDate));
+    res.json(habitCountByDate);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Error fetching data' });
+  }
+};
+
+exports.getHabitDataForCalendar = async (req, res) => {
+  const userId = req.session.userId;
+  try {
+    const habits = await Habit.findByUserId(userId);
+    const habitCountByDate = habits.reduce((acc, habit) => {
+      const date = habit.created_at.toISOString().split('T')[0];
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {});
+    res.json(habitCountByDate);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Error fetching data' });
+  }
+};
+
+exports.getHabitDataByCategory = async (req, res) => {
+  const userId = req.session.userId;
+  const categoryId = req.params.categoryId;
+  try {
+    const habits = await Habit.findByUserIdAndCategoryId(userId, categoryId);
+    const habitCountByDate = habits.reduce((acc, habit) => {
+      const date = habit.created_at.toISOString().split('T')[0];
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {});
+    res.json(habitCountByDate);
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).json({ error: 'Error fetching data' });
@@ -66,43 +96,3 @@ exports.deleteHabit = async (req, res) => {
     res.status(500).send('Error deleting habit');
   }
 };
-
-exports.getHabitDataByCategory = async (req, res) => {
-  const userId = req.session.userId;
-  const categoryId = req.params.categoryId;
-
-  try {
-      const habits = await Habit.findByUserIdAndCategoryId(userId, categoryId);
-      const habitCountByDate = habits.reduce((acc, habit) => {
-          const date = habit.created_at.toISOString().split('T')[0];
-          const timestamp = new Date(date).getTime() / 1000; // Convert to Unix timestamp
-          acc[timestamp] = (acc[timestamp] || 0) + 1;
-          return acc;
-      }, {});
-      res.json(habitCountByDate);
-  } catch (error) {
-      console.error('Error fetching data:', error);
-      res.status(500).json({ error: 'Error fetching data' });
-  }
-};
-
-exports.getHabitDataForCalendar = async (req, res) => {
-  const userId = req.session.userId;
-
-  try {
-      const habits = await Habit.findByUserId(userId);
-      const habitCountByDate = habits.reduce((acc, habit) => {
-          const date = habit.created_at.toISOString().split('T')[0];
-          acc[date] = (acc[date] || 0) + 1;
-          return acc;
-      }, {});
-      res.json(habitCountByDate);
-  } catch (error) {
-      console.error('Error fetching data:', error);
-      res.status(500).json({ error: 'Error fetching data' });
-  }
-};
-
-
-
-

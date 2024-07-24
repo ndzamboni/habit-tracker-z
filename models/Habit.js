@@ -18,21 +18,20 @@ class Habit {
   }
 
   static async delete(id, userId) {
-    const result = await pool.query(
-      'DELETE FROM habits WHERE id = $1 AND user_id = $2 RETURNING *',
-      [id, userId]
-    );
-    return result.rows[0];
+    await pool.query('DELETE FROM habits WHERE id = $1 AND user_id = $2', [id, userId]);
   }
 
   static async findByUserIdAndCategoryId(userId, categoryId) {
     const result = await pool.query(
-        'SELECT * FROM habits WHERE user_id = $1 AND category_id = $2 ORDER BY created_at DESC',
-        [userId, categoryId]
+      'SELECT * FROM habits WHERE user_id = $1 AND category_id = $2 ORDER BY created_at DESC',
+      [userId, categoryId]
     );
     return result.rows;
-}
+  }
 
+  static async updateCategoryIdToNull(categoryId) {
+    await pool.query('UPDATE habits SET category_id = NULL WHERE category_id = $1', [categoryId]);
+  }
 }
 
 module.exports = Habit;

@@ -1,139 +1,75 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('visualizationForm');
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
+function renderHeatmap(data) {
+    // Clear existing heatmap
+    d3.select("#habitHeatmap").html("");
 
-        const chartType = document.getElementById('chartType').value;
-        const habitId = document.getElementById('habitSelector').value;
+    const margin = { top: 50, right: 30, bottom: 50, left: 60 },
+          width = 800 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
 
-        fetch(`/habits/data/${habitId}`)
-            .then(response => response.json())
-            .then(data => {
-                renderChart(chartType, data);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
+    const svg = d3.select("#habitHeatmap")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const parseTime = d3.timeParse("%Y-%m-%d");
+    data.forEach(d => {
+        d.date = parseTime(d.date);
     });
 
-    function renderChart(chartType, data) {
-        const chartContainer = d3.select('#chartContainer');
-        chartContainer.html(''); // Clear previous chart
+    const x = d3.scaleTime()
+        .domain(d3.extent(data, d => d.date))
+        .range([0, width]);
 
-        if (chartType === 'bar') {
-            renderBarChart(data);
-        } else if (chartType === 'line') {
-            renderLineChart(data);
-        } else if (chartType === 'pie') {
-            renderPieChart(data);
-        }
-    }
+    const y = d3.scaleBand()
+        .domain(data.map(d => d.habit))
+        .range([0, height])
+        .padding(0.1);
 
-    function renderBarChart(data) {
-        const margin = { top: 30, right: 30, bottom: 40, left: 40 };
-        const width = 600 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+    svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x).ticks(d3.timeDay.every(1)).tickFormat(d3.timeFormat("%b %d")));
 
-        const svg = d3.select('#chartContainer')
-            .append('svg')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom)
-            .append('g')
-            .attr('transform', `translate(${margin.left},${margin.top})`);
+    svg.append("g")
+        .call(d3.axisLeft(y));
 
-        const x = d3.scaleBand()
-            .domain(data.map(d => d.date))
-            .range([0, width])
-            .padding(0.2);
+    const colorScale = d3.scaleSequential(d3.interpolateBlues)
+        .domain([0, d3.max(data, d => d.value)]);
 
-        svg.append('g')
-            .attr('transform', `translate(0,${height})`)
-            .call(d3.axisBottom(x));
+    svg.selectAll()
+        .data(data, d => d.habit + ':' + d.date)
+        .enter()
+        .append("rect")
+        .attr("x", d => x(d.date))
+        .attr("y", d => y(d.habit))
+        .attr("width", (width / d3.timeDay.range(d3.min(data, d => d.date), d3.max(data, d => d.date)).length) - 1)
+        .attr("height", y.bandwidth())
+        .style("fill", d => colorScale(d.value));
 
-        const y = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d.value)])
-            .range([height, 0]);
+    // Add title
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", -20)
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
+        .text("Habit Heatmap");
 
-        svg.append('g')
-            .call(d3.axisLeft(y));
+    // Add X axis label
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + margin.bottom - 10)
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px")
+        .text("Date");
 
-        svg.selectAll('rect')
-            .data(data)
-            .enter()
-            .append('rect')
-            .attr('x', d => x(d.date))
-            .attr('y', d => y(d.value))
-            .attr('width', x.bandwidth())
-            .attr('height', d => height - y(d.value))
-            .attr('fill', '#69b3a2');
-    }
-
-    function renderLineChart(data) {
-        const margin = { top: 30, right: 30, bottom: 40, left: 40 };
-        const width = 600 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
-
-        const svg = d3.select('#chartContainer')
-            .append('svg')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom)
-            .append('g')
-            .attr('transform', `translate(${margin.left},${margin.top})`);
-
-        const x = d3.scaleTime()
-            .domain(d3.extent(data, d => new Date(d.date)))
-            .range([0, width]);
-
-        svg.append('g')
-            .attr('transform', `translate(0,${height})`)
-            .call(d3.axisBottom(x));
-
-        const y = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d.value)])
-            .range([height, 0]);
-
-        svg.append('g')
-            .call(d3.axisLeft(y));
-
-        svg.append('path')
-            .datum(data)
-            .attr('fill', 'none')
-            .attr('stroke', '#69b3a2')
-            .attr('stroke-width', 1.5)
-            .attr('d', d3.line()
-                .x(d => x(new Date(d.date)))
-                .y(d => y(d.value))
-            );
-    }
-
-    function renderPieChart(data) {
-        const width = 450;
-        const height = 450;
-        const margin = 40;
-
-        const radius = Math.min(width, height) / 2 - margin;
-
-        const svg = d3.select('#chartContainer')
-            .append('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', `translate(${width / 2},${height / 2})`);
-
-        const pie = d3.pie()
-            .value(d => d.value);
-
-        const dataReady = pie(data);
-
-        const arc = d3.arc()
-            .innerRadius(0)
-            .outerRadius(radius);
-
-        svg.selectAll('slices')
-            .data(dataReady)
-            .enter()
-            .append('path')
-            .attr('d', arc)
-            .attr('fill', (d, i) => d3.schemeCategory10[i]);
-    }
-});
+    // Add Y axis label
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left + 10)
+        .attr("x", 0 - (height / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px")
+        .text("Habit");
+}

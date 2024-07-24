@@ -10,7 +10,7 @@ router.get('/', habitController.showHabits);
 router.get('/add', habitController.showAddHabit);
 router.post('/add', habitController.addHabit);
 router.get('/data', habitController.getHabitData);
-router.get('/data/:habitId', habitController.getHabitData);
+router.get('/data/:categoryId', habitController.getHabitDataByCategory);
 router.post('/delete/:id', habitController.deleteHabit);
 
 module.exports = router;

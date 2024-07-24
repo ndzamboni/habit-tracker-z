@@ -66,3 +66,25 @@ exports.deleteHabit = async (req, res) => {
     res.status(500).send('Error deleting habit');
   }
 };
+
+exports.getHabitDataByCategory = async (req, res) => {
+  const userId = req.session.userId;
+  const categoryId = req.params.categoryId;
+
+  try {
+      const habits = await Habit.findByUserIdAndCategoryId(userId, categoryId);
+      const habitCountByDate = habits.reduce((acc, habit) => {
+          const date = habit.created_at.toISOString().split('T')[0];
+          const timestamp = new Date(date).getTime() / 1000; // Convert to Unix timestamp
+          acc[timestamp] = (acc[timestamp] || 0) + 1;
+          return acc;
+      }, {});
+      res.json(habitCountByDate);
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Error fetching data' });
+  }
+};
+
+
+

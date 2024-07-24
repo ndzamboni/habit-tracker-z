@@ -1,15 +1,14 @@
 <div class="container">
     <h2 class="mb-4">Your Habits</h2>
     <a href="/habits/add" class="btn btn-primary mb-3">Add a New Habit</a>
-    <div id="habitsList" class="list-group">
-        {{#each habits}}
-        <div class="list-group-item d-flex justify-content-between align-items-center">
-            <p class="mb-0">{{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})</p>
-            <form action="/habits/delete/{{id}}" method="post" class="ms-3">
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-            </form>
-        </div>
-        {{/each}}
+    <div class="mb-3">
+        <label for="categorySelector" class="form-label">Select Category:</label>
+        <select id="categorySelector" class="form-select">
+            <option value="all">All Categories</option>
+            {{#each categories}}
+            <option value="{{this.id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
     </div>
     <div id="habitHeatmap" class="mt-4"></div>
 </div>

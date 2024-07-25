@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchHabitList(categoryId) {
-        const url = categoryId === 'all' ? '/habits/list' : `/habits/list/${categoryId}`;
+        const url = categoryId === 'all' ? '/habits/list/all' : `/habits/list/${categoryId}`;
         fetch(url)
             .then(response => {
                 if (!response.ok) {

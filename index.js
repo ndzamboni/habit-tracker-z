@@ -14,7 +14,15 @@ const hbs = exphbs.create({
     defaultLayout: 'main',
     extname: '.hbs',
     partialsDir: path.join(__dirname, 'views', 'partials'),
-    helpers: require('./helpers/dateHelpers')
+    helpers: {
+        formatDate: require('./helpers/dateHelpers').formatDate,
+        ifCond: function (v1, v2, options) {
+            if (v1 === v2) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        }
+    }
 });
 
 app.engine('hbs', hbs.engine);

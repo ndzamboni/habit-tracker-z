@@ -1,8 +1,25 @@
-{{#each habits}}
-<div class="list-group-item d-flex justify-content-between align-items-center">
-    {{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})
-    <form action="/habits/delete/{{id}}" method="post" class="ms-3">
-        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-    </form>
+{{#each categories}}
+<div class="accordion-item">
+    <h2 class="accordion-header" id="heading-{{this.id}}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{this.id}}" aria-expanded="false" aria-controls="collapse-{{this.id}}">
+            {{this.name}}
+        </button>
+    </h2>
+    <div id="collapse-{{this.id}}" class="accordion-collapse collapse" aria-labelledby="heading-{{this.id}}">
+        <div class="accordion-body">
+            <div class="list-group mb-4">
+                {{#each ../habits}}
+                {{#ifCond this.category_id ../this.id}}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    {{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})
+                    <form action="/habits/delete/{{id}}" method="post" class="ms-3">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+                {{/ifCond}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
 </div>
 {{/each}}

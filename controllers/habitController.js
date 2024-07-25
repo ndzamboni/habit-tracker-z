@@ -90,7 +90,7 @@ exports.getHabitsByCategory = async (req, res) => {
     const categoryId = req.params.categoryId;
     try {
         const habits = await Habit.findByUserIdAndCategoryId(userId, categoryId);
-        res.render('partials/habitsList', { habits });
+        res.render('partials/habitsList', { habits, layout: false }); // Ensure layout: false is used
     } catch (error) {
         console.error('Error fetching habits:', error);
         res.status(500).send('Error fetching habits');

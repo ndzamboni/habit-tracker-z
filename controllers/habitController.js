@@ -89,16 +89,16 @@ exports.getHabitsByCategory = async (req, res) => {
     const userId = req.session.userId;
     const categoryId = req.params.categoryId;
     try {
+        const categories = await Category.findByUserId(userId);
         const habits = categoryId === 'all'
             ? await Habit.findByUserId(userId)
             : await Habit.findByUserIdAndCategoryId(userId, categoryId);
-        res.render('partials/habitsList', { habits, layout: false });
+        res.render('partials/habitsList', { habits, categories, layout: false });
     } catch (error) {
         console.error('Error fetching habits:', error);
         res.status(500).send('Error fetching habits');
     }
 };
-
 
 exports.deleteHabit = async (req, res) => {
     const { id } = req.params;

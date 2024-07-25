@@ -14,17 +14,18 @@
     </div>
 
     <!-- Habits List -->
-    <div id="habitsList" class="list-group mb-4">
-        {{#each habits}}
-        <div class="list-group-item d-flex justify-content-between align-items-center">
-            {{name}} - {{description}} ({{formatDate created_at "MMM Do YYYY"}})
-            <form action="/habits/delete/{{id}}" method="post" class="ms-3">
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-            </form>
-        </div>
-        {{/each}}
+    <div id="habitsList" class="accordion" id="habitsAccordion">
+        <!-- The habits will be dynamically loaded here -->
     </div>
 
     <!-- Calendar Heatmap Container -->
     <div id="habitHeatmap" class="mt-4"></div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- D3.js Library -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<!-- Custom Scripts -->
+<script src="/js/scripts.js" defer></script>
+<script src="/js/calendarHeatmap.js" defer></script>

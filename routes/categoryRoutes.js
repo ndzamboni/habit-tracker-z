@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.use(ensureAuthenticated);
 
-router.get('/', categoryController.showCategories);
+router.get('/', categoryController.showCategories); // For rendering the view
+router.get('/api', categoryController.getCategories); // For returning JSON
 router.post('/add', categoryController.addCategory);
 router.post('/delete/:id', categoryController.deleteCategory);
 

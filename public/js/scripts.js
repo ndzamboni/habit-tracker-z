@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchAllHabitsAndCategories() {
-        Promise.all([fetch('/habits/data'), fetch('/categories')])
+        Promise.all([fetch('/habits/data'), fetch('/categories/api')]) // Update the endpoint
             .then(([habitsResponse, categoriesResponse]) => {
                 if (!habitsResponse.ok || !categoriesResponse.ok) {
                     throw new Error('Network response was not ok');

@@ -8,6 +8,6 @@ router.use(ensureAuthenticated);
 
 router.get('/', categoryController.showCategories);
 router.post('/add', categoryController.addCategory);
-router.post('/delete/:id', categoryController.deleteCategory);  // Add this line
+router.post('/delete/:id', categoryController.deleteCategory);
 
 module.exports = router;

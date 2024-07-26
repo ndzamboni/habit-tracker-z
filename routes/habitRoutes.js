@@ -12,7 +12,7 @@ router.post('/add', habitController.addHabit);
 router.get('/data', habitController.getHabitData);
 router.get('/data/calendar', habitController.getHabitDataForCalendar);
 router.get('/data/:categoryId', habitController.getHabitDataByCategory);
-router.get('/list/:categoryId', habitController.getHabitsByCategory); // Add this line
+router.get('/list/:categoryId', habitController.getHabitsByCategory);
 router.post('/delete/:id', habitController.deleteHabit);
 
 module.exports = router;

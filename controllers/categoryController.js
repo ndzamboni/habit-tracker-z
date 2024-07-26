@@ -2,39 +2,36 @@ const Category = require('../models/Category');
 const Habit = require('../models/Habit');
 
 exports.showCategories = async (req, res) => {
-  const userId = req.session.userId;
-  try {
-    const categories = await Category.findByUserId(userId);
-    res.render('categories', { categories });
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    res.status(500).send('Error fetching categories');
-  }
+    const userId = req.session.userId;
+    try {
+        const categories = await Category.findByUserId(userId);
+        res.render('categories', { categories });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).send('Error fetching categories');
+    }
 };
 
 exports.addCategory = async (req, res) => {
-  const userId = req.session.userId;
-  const { categoryName } = req.body;
-  try {
-    await Category.create(categoryName, userId);
-    res.redirect('/categories');
-  } catch (error) {
-    console.error('Error adding category:', error);
-    res.status(500).send('Error adding category');
-  }
+    const userId = req.session.userId;
+    const { categoryName } = req.body;
+    try {
+        await Category.create(categoryName, userId);
+        res.redirect('/categories');
+    } catch (error) {
+        console.error('Error adding category:', error);
+        res.status(500).send('Error adding category');
+    }
 };
 
 exports.deleteCategory = async (req, res) => {
-  const categoryId = req.params.id;
-
-  try {
-      // Update associated habits first
-      await Habit.updateCategoryIdToNull(categoryId);
-      await Category.delete(categoryId);
-      res.redirect('/categories');
-  } catch (error) {
-      console.error('Error deleting category:', error);
-      res.status(500).send('Error deleting category');
-  }
+    const categoryId = req.params.id;
+    try {
+        await Habit.updateCategoryIdToNull(categoryId); // Ensure category ID is set to null before deleting
+        await Category.delete(categoryId);
+        res.redirect('/categories');
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        res.status(500).send('Error deleting category');
+    }
 };
-

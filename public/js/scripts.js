@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+    let allHabits = [];
+    let allCategories = [];
+
     // Theme switcher
     const themeSwitcher = document.getElementById('theme-switcher');
     if (themeSwitcher && !themeSwitcher.dataset.listenerAdded) {
@@ -29,13 +32,92 @@ document.addEventListener('DOMContentLoaded', function() {
     if (categorySelector) {
         categorySelector.addEventListener('change', function() {
             const categoryId = categorySelector.value;
+            console.log('Category selected:', categoryId); // Debugging statement
+            updateHabitList(categoryId);
             fetchHabitData(categoryId);
-            fetchHabitList(categoryId);
         });
 
         // Initial load
-        fetchHabitData('all');
-        fetchHabitList('all');
+        fetchAllHabitsAndCategories();
+    }
+
+    function fetchAllHabitsAndCategories() {
+        Promise.all([fetch('/habits/data'), fetch('/categories')])
+            .then(([habitsResponse, categoriesResponse]) => {
+                if (!habitsResponse.ok || !categoriesResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return Promise.all([habitsResponse.json(), categoriesResponse.json()]);
+            })
+            .then(([habitsData, categoriesData]) => {
+                allHabits = habitsData;
+                allCategories = categoriesData;
+                console.log('Habits:', allHabits); // Debugging statement
+                console.log('Categories:', allCategories); // Debugging statement
+                updateHabitList('all');
+                fetchHabitData('all');
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    function updateHabitList(categoryId) {
+        const habitsList = document.getElementById('habitsList');
+        habitsList.innerHTML = '';
+
+        const filteredHabits = categoryId === 'all' ? allHabits : allHabits.filter(habit => habit.category_id == categoryId);
+        const category = allCategories.find(cat => cat.id == categoryId);
+
+        console.log('Filtered Habits:', filteredHabits); // Debugging statement
+        console.log('Selected Category:', category); // Debugging statement
+
+        const createAccordionItem = (habits, category) => {
+            if (!category) {
+                console.error('Category not found for habits:', habits); // Debugging statement
+                return '';
+            }
+            return `
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading-${category.id}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${category.id}" aria-expanded="false" aria-controls="collapse-${category.id}">
+                            ${category.name}
+                        </button>
+                    </h2>
+                    <div id="collapse-${category.id}" class="accordion-collapse collapse" aria-labelledby="heading-${category.id}" data-bs-parent="#habitsAccordion">
+                        <div class="accordion-body">
+                            <div class="list-group mb-4">
+                                ${habits.map(habit => `
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        ${habit.name} - ${habit.description} (${new Date(habit.created_at).toLocaleDateString()})
+                                        <form action="/habits/delete/${habit.id}" method="post" class="ms-3">
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        if (categoryId === 'all') {
+            allCategories.forEach(cat => {
+                const catHabits = filteredHabits.filter(habit => habit.category_id == cat.id);
+                habitsList.innerHTML += createAccordionItem(catHabits, cat);
+            });
+        } else {
+            habitsList.innerHTML += createAccordionItem(filteredHabits, category);
+        }
+
+        // Add Bootstrap's collapse functionality
+        const accordionElements = document.querySelectorAll('.accordion');
+        accordionElements.forEach(accordion => {
+            new bootstrap.Collapse(accordion, {
+                toggle: false
+            });
+        });
     }
 
     function fetchHabitData(categoryId) {
@@ -52,23 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
-            });
-    }
-
-    function fetchHabitList(categoryId) {
-        const url = categoryId === 'all' ? '/habits/list/all' : `/habits/list/${categoryId}`;
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.text();
-            })
-            .then(html => {
-                document.getElementById('habitsList').innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error fetching habits list:', error);
             });
     }
 });

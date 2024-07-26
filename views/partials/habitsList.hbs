@@ -5,7 +5,7 @@
             {{this.name}}
         </button>
     </h2>
-    <div id="collapse-{{this.id}}" class="accordion-collapse collapse" aria-labelledby="heading-{{this.id}}">
+    <div id="collapse-{{this.id}}" class="accordion-collapse collapse" aria-labelledby="heading-{{this.id}}" data-bs-parent="#habitsAccordion">
         <div class="accordion-body">
             <div class="list-group mb-4">
                 {{#each ../habits}}

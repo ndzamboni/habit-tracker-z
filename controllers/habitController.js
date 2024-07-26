@@ -40,12 +40,7 @@ exports.getHabitData = async (req, res) => {
     const userId = req.session.userId;
     try {
         const habits = await Habit.findByUserId(userId);
-        const habitCountByDate = habits.reduce((acc, habit) => {
-            const date = habit.created_at.toISOString().split('T')[0];
-            acc[date] = (acc[date] || 0) + 1;
-            return acc;
-        }, {});
-        res.json(habitCountByDate);
+        res.json(habits); // Return the habits as JSON
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).json({ error: 'Error fetching data' });
@@ -61,7 +56,7 @@ exports.getHabitDataForCalendar = async (req, res) => {
             acc[date] = (acc[date] || 0) + 1;
             return acc;
         }, {});
-        res.json(habitCountByDate);
+        res.json(habitCountByDate); // Return the habit count by date as JSON
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).json({ error: 'Error fetching data' });
@@ -78,7 +73,7 @@ exports.getHabitDataByCategory = async (req, res) => {
             acc[date] = (acc[date] || 0) + 1;
             return acc;
         }, {});
-        res.json(habitCountByDate);
+        res.json(habitCountByDate); // Return the habit count by date as JSON
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).json({ error: 'Error fetching data' });
@@ -93,10 +88,10 @@ exports.getHabitsByCategory = async (req, res) => {
         const habits = categoryId === 'all'
             ? await Habit.findByUserId(userId)
             : await Habit.findByUserIdAndCategoryId(userId, categoryId);
-        res.render('partials/habitsList', { habits, categories, selectedCategoryId: categoryId, layout: false });
+        res.json({ habits, categories }); // Return the habits and categories as JSON
     } catch (error) {
         console.error('Error fetching habits:', error);
-        res.status(500).send('Error fetching habits');
+        res.status(500).json({ error: 'Error fetching habits' });
     }
 };
 

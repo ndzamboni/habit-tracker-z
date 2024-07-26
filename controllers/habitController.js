@@ -25,16 +25,16 @@ exports.showAddHabit = async (req, res) => {
 };
 
 exports.addHabit = async (req, res) => {
-    const { habitName, habitDescription, habitDate, categoryId } = req.body;
+    const { habitName, habitDescription, habitDate, categoryId, timeSpent } = req.body;
     const userId = req.session.userId;
     try {
-        await Habit.create(userId, habitName, habitDescription, habitDate, categoryId);
-        res.redirect('/habits');
+      await Habit.create(userId, habitName, habitDescription, habitDate, categoryId, timeSpent);
+      res.redirect('/habits');
     } catch (error) {
-        console.error('Error adding habit:', error);
-        res.status(500).send('Error adding habit');
+      console.error('Error adding habit:', error);
+      res.status(500).send('Error adding habit');
     }
-};
+  };
 
 exports.getHabitData = async (req, res) => {
     const userId = req.session.userId;
@@ -106,3 +106,50 @@ exports.deleteHabit = async (req, res) => {
         res.status(500).send('Error deleting habit');
     }
 };
+
+exports.updateHabit = async (req, res) => {
+    const { id } = req.params;
+    const { habitName, habitDescription, habitDate, categoryId, timeSpent } = req.body;
+    const userId = req.session.userId;
+    try {
+      await Habit.update(id, userId, habitName, habitDescription, habitDate, categoryId, timeSpent);
+      res.redirect('/habits');
+    } catch (error) {
+      console.error('Error updating habit:', error);
+      res.status(500).send('Error updating habit');
+    }
+  };
+
+  exports.getHabitDataForHexbin = async (req, res) => {
+    const userId = req.session.userId;
+    try {
+      const habits = await Habit.findByUserId(userId);
+      const hexbinData = habits.map(habit => ({
+        name: habit.name,
+        description: habit.description,
+        date: habit.created_at,
+        timeSpent: habit.time_spent
+      }));
+      res.json(hexbinData);
+    } catch (error) {
+      console.error('Error fetching hexbin data:', error);
+      res.status(500).json({ error: 'Error fetching hexbin data' });
+    }
+  };
+  
+  exports.getCategoryDataForTreemap = async (req, res) => {
+    const userId = req.session.userId;
+    try {
+      const categories = await Category.findByUserId(userId);
+      const habits = await Habit.findByUserId(userId);
+      const treemapData = categories.map(category => ({
+        name: category.name,
+        count: habits.filter(habit => habit.category_id === category.id).length
+      }));
+      res.json(treemapData);
+    } catch (error) {
+      console.error('Error fetching treemap data:', error);
+      res.status(500).json({ error: 'Error fetching treemap data' });
+    }
+  };
+  

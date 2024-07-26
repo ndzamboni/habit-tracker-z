@@ -136,4 +136,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error fetching data:', error);
             });
     }
+
+    // Chart buttons
+    document.getElementById('heatmapBtn').addEventListener('click', function() {
+        document.getElementById('habitHeatmap').style.display = 'block';
+        document.getElementById('hexbinChart').style.display = 'none';
+        document.getElementById('treemapChart').style.display = 'none';
+    });
+
+    document.getElementById('hexbinBtn').addEventListener('click', function() {
+        fetch('/habits/data/hexbin')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('habitHeatmap').style.display = 'none';
+                document.getElementById('hexbinChart').style.display = 'block';
+                document.getElementById('treemapChart').style.display = 'none';
+                renderHexbinChart(data);
+            })
+            .catch(error => console.error('Error fetching hexbin data:', error));
+    });
+
+    document.getElementById('treemapBtn').addEventListener('click', function() {
+        fetch('/habits/data/treemap')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('habitHeatmap').style.display = 'none';
+                document.getElementById('hexbinChart').style.display = 'none';
+                document.getElementById('treemapChart').style.display = 'block';
+                renderTreemapChart(data);
+            })
+            .catch(error => console.error('Error fetching treemap data:', error));
+    });
 });

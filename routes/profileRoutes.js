@@ -1,10 +1,10 @@
 const express = require('express');
 const userController = require('../controllers/userController');
-const authMiddleware = require('../middlewares/authMiddleware');
+const { ensureAuthenticated } = require('../middleware/authMiddleware'); // Ensure the middleware path is correct
 
 const router = express.Router();
 
-router.use(authMiddleware.ensureAuthenticated);
+router.use(ensureAuthenticated);
 
 router.get('/', userController.showProfile);
 

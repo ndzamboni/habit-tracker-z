@@ -35,3 +35,8 @@ CREATE TABLE habit_entries (
   date DATE NOT NULL,
   completed BOOLEAN NOT NULL DEFAULT false
 );
+
+-- Add time_spent column to habit_entries table
+ALTER TABLE habit_entries ADD COLUMN time_spent INTEGER;
+
+

@@ -16,7 +16,7 @@ exports.getCategories = async (req, res) => {
     const userId = req.session.userId;
     try {
         const categories = await Category.findByUserId(userId);
-        res.json(categories); // Return categories as JSON
+        res.json(categories);
     } catch (error) {
         console.error('Error fetching categories:', error);
         res.status(500).json({ error: 'Error fetching categories' });
@@ -38,7 +38,7 @@ exports.addCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
     const categoryId = req.params.id;
     try {
-        await Habit.updateCategoryIdToNull(categoryId); // Ensure category ID is set to null before deleting
+        await Habit.updateCategoryIdToNull(categoryId);
         await Category.delete(categoryId);
         res.redirect('/categories');
     } catch (error) {

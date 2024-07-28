@@ -12,33 +12,38 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 localStorage.setItem('theme', 'light');
             }
-            console.log('Theme toggled.'); // Debugging statement
+            console.log('Theme toggled.');
         });
-
-        // Mark that the listener has been added
         themeSwitcher.dataset.listenerAdded = true;
-
-        // Apply saved theme on load
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
-            console.log('Dark mode applied on load.'); // Debugging statement
+            console.log('Dark mode applied on load.');
         }
-    } else {
-        console.log('Theme switcher not found or listener already added.'); // Debugging statement
     }
 
     const categorySelector = document.getElementById('categorySelector');
+    const chartSelector = document.getElementById('chartSelector');
+    const calendarHeatmapContainer = document.getElementById('calendarHeatmap');
+    const hexbinChartContainer = document.getElementById('hexbinChart');
+    const treemapChartContainer = document.getElementById('treemapChart');
+
     if (categorySelector) {
         categorySelector.addEventListener('change', function() {
             const categoryId = categorySelector.value;
-            console.log('Category selected:', categoryId); // Debugging statement
+            console.log('Category selected:', categoryId);
             updateHabitList(categoryId);
             fetchHabitData(categoryId);
         });
-
-        // Initial load
         fetchAllHabitsAndCategories();
+    }
+
+    if (chartSelector) {
+        chartSelector.addEventListener('change', function() {
+            const selectedChart = chartSelector.value;
+            console.log('Chart selected:', selectedChart);
+            toggleChartVisibility(selectedChart);
+        });
     }
 
     function fetchAllHabitsAndCategories() {
@@ -52,12 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(([habitsData, categoriesData]) => {
                 allHabits = habitsData;
                 allCategories = categoriesData;
-                console.log('Habits:', allHabits); // Debugging statement
-                console.log('Categories:', allCategories); // Debugging statement
+                console.log('Habits:', allHabits);
+                console.log('Categories:', allCategories);
                 updateHabitList('all');
                 fetchHabitData('all');
-                fetchHexbinData();
-                fetchTreemapData();
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -71,12 +74,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const filteredHabits = categoryId === 'all' ? allHabits : allHabits.filter(habit => habit.category_id == categoryId);
         const category = allCategories.find(cat => cat.id == categoryId);
 
-        console.log('Filtered Habits:', filteredHabits); // Debugging statement
-        console.log('Selected Category:', category); // Debugging statement
+        console.log('Filtered Habits:', filteredHabits);
+        console.log('Selected Category:', category);
 
         const createAccordionItem = (habits, category) => {
             if (!category) {
-                console.error('Category not found for habits:', habits); // Debugging statement
+                console.error('Category not found for habits:', habits);
                 return '';
             }
             return `
@@ -113,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
             habitsList.innerHTML += createAccordionItem(filteredHabits, category);
         }
 
-        // Add Bootstrap's collapse functionality
         const accordionElements = document.querySelectorAll('.accordion');
         accordionElements.forEach(accordion => {
             new bootstrap.Collapse(accordion, {
@@ -137,6 +139,18 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
+    }
+
+    function toggleChartVisibility(selectedChart) {
+        calendarHeatmapContainer.style.display = selectedChart === 'calendarHeatmap' ? 'block' : 'none';
+        hexbinChartContainer.style.display = selectedChart === 'hexbin' ? 'block' : 'none';
+        treemapChartContainer.style.display = selectedChart === 'treemap' ? 'block' : 'none';
+
+        if (selectedChart === 'hexbin') {
+            fetchHexbinData();
+        } else if (selectedChart === 'treemap') {
+            fetchTreemapData();
+        }
     }
 
     function fetchHexbinData() {

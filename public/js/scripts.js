@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchAllHabitsAndCategories() {
-        Promise.all([fetch('/habits/data'), fetch('/categories/api')]) // Update the endpoint
+        Promise.all([fetch('/habits/data'), fetch('/categories/api')])
             .then(([habitsResponse, categoriesResponse]) => {
                 if (!habitsResponse.ok || !categoriesResponse.ok) {
                     throw new Error('Network response was not ok');
@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Categories:', allCategories); // Debugging statement
                 updateHabitList('all');
                 fetchHabitData('all');
+                fetchHexbinData();
+                fetchTreemapData();
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -137,34 +139,35 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Chart buttons
-    document.getElementById('heatmapBtn').addEventListener('click', function() {
-        document.getElementById('habitHeatmap').style.display = 'block';
-        document.getElementById('hexbinChart').style.display = 'none';
-        document.getElementById('treemapChart').style.display = 'none';
-    });
-
-    document.getElementById('hexbinBtn').addEventListener('click', function() {
+    function fetchHexbinData() {
         fetch('/habits/data/hexbin')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(data => {
-                document.getElementById('habitHeatmap').style.display = 'none';
-                document.getElementById('hexbinChart').style.display = 'block';
-                document.getElementById('treemapChart').style.display = 'none';
                 renderHexbinChart(data);
             })
-            .catch(error => console.error('Error fetching hexbin data:', error));
-    });
+            .catch(error => {
+                console.error('Error fetching hexbin data:', error);
+            });
+    }
 
-    document.getElementById('treemapBtn').addEventListener('click', function() {
+    function fetchTreemapData() {
         fetch('/habits/data/treemap')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(data => {
-                document.getElementById('habitHeatmap').style.display = 'none';
-                document.getElementById('hexbinChart').style.display = 'none';
-                document.getElementById('treemapChart').style.display = 'block';
                 renderTreemapChart(data);
             })
-            .catch(error => console.error('Error fetching treemap data:', error));
-    });
+            .catch(error => {
+                console.error('Error fetching treemap data:', error);
+            });
+    }
 });

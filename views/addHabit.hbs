@@ -14,6 +14,10 @@
             <input type="date" id="habitDate" name="habitDate" required class="form-control">
         </div>
         <div class="mb-3">
+            <label for="timeSpent" class="form-label">Time Spent (minutes):</label>
+            <input type="number" id="timeSpent" name="timeSpent" required class="form-control">
+        </div>
+        <div class="mb-3">
             <label for="categoryId" class="form-label">Category:</label>
             <select id="categoryId" name="categoryId" required class="form-select">
                 {{#each categories}}

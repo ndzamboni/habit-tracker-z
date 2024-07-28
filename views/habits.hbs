@@ -13,19 +13,19 @@
         </select>
     </div>
 
-    <!-- Chart Selection -->
-    <div class="mb-4">
-        <button id="heatmapBtn" class="btn btn-secondary">Calendar Heatmap</button>
-        <button id="hexbinBtn" class="btn btn-secondary">Hexbin Chart</button>
-        <button id="treemapBtn" class="btn btn-secondary">Treemap Chart</button>
+    <!-- Habits List -->
+    <div id="habitsList" class="accordion" id="habitsAccordion">
+        <!-- The habits will be dynamically loaded here -->
     </div>
 
-    <!-- Chart Containers -->
-    <div id="chartContainer">
-        <div id="habitHeatmap" class="chart"></div>
-        <div id="hexbinChart" class="chart" style="display:none;"></div>
-        <div id="treemapChart" class="chart" style="display:none;"></div>
-    </div>
+    <!-- Calendar Heatmap Container -->
+    <div id="habitHeatmap" class="mt-4"></div>
+
+    <!-- Hexbin Chart Container -->
+    <div id="hexbinChart" class="mt-4"></div>
+
+    <!-- Treemap Chart Container -->
+    <div id="treemapChart" class="mt-4"></div>
 </div>
 
 <!-- Bootstrap JS -->

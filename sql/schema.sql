@@ -25,6 +25,7 @@ CREATE TABLE habits (
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  time_spent INTEGER NOT NULL,  -- Add this column
   category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE
 );
 
@@ -35,8 +36,3 @@ CREATE TABLE habit_entries (
   date DATE NOT NULL,
   completed BOOLEAN NOT NULL DEFAULT false
 );
-
--- Add time_spent column to habit_entries table
-ALTER TABLE habit_entries ADD COLUMN time_spent INTEGER;
-
-

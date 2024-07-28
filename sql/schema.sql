@@ -26,7 +26,7 @@ CREATE TABLE habits (
   description TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
-  time_spent INTEGER NOT NULL
+  time_spent INTEGER NOT NULL -- Add time_spent column
 );
 
 -- Create habit entries table for tracking daily completions

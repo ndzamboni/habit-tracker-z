@@ -1,5 +1,5 @@
 function renderCalendarHeatmap(data) {
-    d3.select("#calendarHeatmap").selectAll("*").remove(); // Clear existing heatmap
+    d3.select("#habitHeatmap").selectAll("*").remove(); // Clear existing heatmap
 
     const margin = { top: 20, right: 10, bottom: 10, left: 20 };
     const cellSize = 20;
@@ -13,7 +13,7 @@ function renderCalendarHeatmap(data) {
     const years = d3.groups(Object.entries(data), d => new Date(d[0]).getFullYear());
 
     years.forEach(([year, entries], index) => {
-        const svg = d3.select("#calendarHeatmap")
+        const svg = d3.select("#habitHeatmap")
             .append("svg")
             .attr("width", width)
             .attr("height", height)

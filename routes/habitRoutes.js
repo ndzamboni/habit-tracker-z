@@ -11,10 +11,10 @@ router.get('/add', habitController.showAddHabit);
 router.post('/add', habitController.addHabit);
 router.get('/data', habitController.getHabitData);
 router.get('/data/calendar', habitController.getHabitDataForCalendar);
+router.get('/data/hexbin', habitController.getHabitDataForHexbin); // Corrected
+router.get('/data/treemap', habitController.getHabitDataForTreemap); // Corrected
 router.get('/data/:categoryId', habitController.getHabitDataByCategory);
 router.get('/list/:categoryId', habitController.getHabitsByCategory);
-router.get('/data/hexbin', habitController.getHabitDataForHexbin); // Add this line
-router.get('/data/treemap', habitController.getHabitDataForTreemap); // Add this line
 router.post('/delete/:id', habitController.deleteHabit);
 
 module.exports = router;
